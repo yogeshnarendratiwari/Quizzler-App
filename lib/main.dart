@@ -1,4 +1,5 @@
 import 'package:flutter/material.dart';
+import 'QuestionBank.dart';
 
 void main() => runApp(
       const MaterialApp(
@@ -15,10 +16,32 @@ class Quizzler extends StatefulWidget {
   @override
   _QuizzlerState createState() => _QuizzlerState();
 }
+
+void scoreKeeperViewer(bool x){
+  if (x) {
+      scoreKeeper.add(const Icon(
+        Icons.check,
+        color: Colors.green,
+      ));
+  }
+  else {
+      scoreKeeper.add(const Icon(
+        Icons.close,
+        color: Colors.red,
+      ));
+  }
+  if(questionNumber<questionBank.length-1) {
+      questionNumber++;
+
+  }
+  else{
+    questionNumber=0;
+  }
+}
+
 int questionNumber = 0;
 List <Icon> scoreKeeper = [];
-List <String> question = ['can monkey fly?','number of teeth in human body is 32?','number of bones in human body is 206?'];
-
+List <QuestionBank> questionBank = [QuestionBank(q:'can monkey fly?' , a: false),QuestionBank(q: 'number of teeth in human body is 32?', a: true),QuestionBank(q:'number of bones in human body is 206?', a: true),QuestionBank(q: 'Are you fool', a:false)];
 class _QuizzlerState extends State<Quizzler> {
   @override
   Widget build(BuildContext context) {
@@ -36,7 +59,7 @@ class _QuizzlerState extends State<Quizzler> {
                 child: Padding(
                   padding: EdgeInsets.all(15.0),
                   child: Text(
-                    question[questionNumber],
+                    questionBank[questionNumber].question,
                     textAlign: TextAlign.center,
                     style: TextStyle(
                       color: Colors.black,
@@ -51,13 +74,9 @@ class _QuizzlerState extends State<Quizzler> {
               padding : const EdgeInsets.symmetric(horizontal: 15.0,vertical: 2.0),
               child:TextButton(
                 onPressed: () {
-                 setState(() {
-                   questionNumber++;
-                   scoreKeeper.add(const Icon(
-                     Icons.check,
-                     color: Colors.green,
-                   ));
-                 });
+                  setState(() {
+                    scoreKeeperViewer(questionBank[questionNumber].answer);
+                  });
                 },
                 child: const Text(
                   "True",
@@ -77,14 +96,11 @@ class _QuizzlerState extends State<Quizzler> {
               padding : const EdgeInsets.symmetric(horizontal: 15.0,vertical: 2.0),
               child:TextButton(
                 onPressed: () {
-                  setState(() {
-                    questionNumber++;
-                    scoreKeeper.add(const Icon(
-                      Icons.close,
-                      color: Colors.red,
-                    ));
-                  });
+                     setState(() {
+                       scoreKeeperViewer(!questionBank[questionNumber].answer);
+                     });
                   },
+
                 child: const Text(
                   "False",
                   style: TextStyle(
@@ -97,7 +113,6 @@ class _QuizzlerState extends State<Quizzler> {
                 ),
               ),
             ),),
-          // TODO : add a score keeper here
           Expanded(
             flex: 2,
             child: Row(
